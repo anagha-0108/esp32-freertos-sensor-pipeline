@@ -64,27 +64,9 @@ TEMP,36.10
 | Message Buffer | `msgbuf_uart` | Single serialization point before the only task allowed to write to the UART/stdout — avoids any peripheral race condition |
 | Watchdog | `esp_task_wdt_add/reset` in `AggregatorTask` | If the aggregator ever deadlocks or stalls, the watchdog reboots the chip instead of silently hanging forever |
 
-## Swapping in a real second UART later (optional upgrade)
-Right now output goes over UART0 (the same port used for flashing/monitor —
-this is why we didn't call `uart_driver_install()` a second time, which
-would have conflicted with the console driver).
-
-If you later get a cheap USB-TTL adapter, you can route telemetry to a
-dedicated UART1 pin pair instead, freeing UART0 for normal logging. Only
-`UartTxTask` needs to change — swap the `fwrite(stdout)` call for:
-```c
-uart_driver_install(UART_NUM_1, 1024, 0, 0, NULL, 0);
-uart_param_config(UART_NUM_1, &cfg);
-uart_set_pin(UART_NUM_1, GPIO_NUM_17, GPIO_NUM_16, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
-...
-uart_write_bytes(UART_NUM_1, buf, n);
-```
-Nothing else in the architecture changes — that's the point of having a
-single owner task for the peripheral.
-
-## Replacing fake sensors with real ones (optional upgrade)
-If you pick up a cheap DHT22 or MPU6050 later, only the three sensor tasks
-change (swap `esp_random()` for an actual driver read) — the entire rest
-of the pipeline (queue set, fault path, aggregator, UART task) is
-untouched. That's a good example of clean separation of concerns to
-mention in an interview.
+## Notes
+Sensor data is simulated with `esp_random()` instead of real hardware
+readings, and telemetry is written to the existing console UART (UART0)
+rather than a dedicated peripheral. Both choices were made deliberately
+to keep the project runnable on bare hardware with no extra components,
+while still exercising the full set of FreeRTOS primitives above.
