@@ -51,7 +51,7 @@ TEMP,36.10
 ```
 (Press `Ctrl+]` to exit the monitor.)
 
-## What's actually happening (for your resume / interview talking points)
+
 
 | Mechanism | Where | Why it's there |
 |---|---|---|
