@@ -148,7 +148,13 @@ static void AggregatorTask(void *pv)
     esp_task_wdt_add(NULL);
 
     safe_print("[SYS] Waiting for all sensors to come online...\n");
-    xEventGroupWaitBits(eg_ready, ALL_READY_BITS, pdFALSE, pdTRUE, portMAX_DELAY);
+    xEventGroupWaitBits(
+    eg_ready,       // Event group handle
+    BIT_ALL_READY,  // Bits to wait for: (1<<0) | (1<<1) | (1<<2) -> 0x07
+    pdFALSE,        // Clear bits on exit? (pdFALSE = Leave bits set)
+    pdTRUE,         // Wait for ALL bits? (pdTRUE = AND condition, pdFALSE = OR condition)
+    portMAX_DELAY   // Timeout (block indefinitely until ready)
+);
     safe_print("[SYS] All sensors ready. Starting aggregation.\n");
 
     char line[80];
