@@ -51,8 +51,6 @@ TEMP,36.10
 ```
 (Press `Ctrl+]` to exit the monitor.)
 
-
-
 | Mechanism | Where | Why it's there |
 |---|---|---|
 | 3 separate Queues | `q_temp`, `q_humid`, `q_vibro` | Each sensor task is independent; no shared state to corrupt |
