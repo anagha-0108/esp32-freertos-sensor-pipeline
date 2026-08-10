@@ -33,8 +33,7 @@
  * If you later get a USB-TTL adapter, swap UartTxTask's fwrite() call
  * for uart_write_bytes() on UART_NUM_1/2 with dedicated GPIO pins —
  * the rest of the architecture (message buffer, aggregator, etc.)
- * doesn't change at all. That's a good "what would you change for
- * production" answer in interviews.
+ * doesn't change at all. 
  */
 
 #define SENSOR_QUEUE_LEN   5
